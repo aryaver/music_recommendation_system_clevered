@@ -9,8 +9,6 @@ import dash_bootstrap_components as dbc
 
 data=pd.read_csv('https://confrecordings.ams3.digitaloceanspaces.com/top50.csv',encoding='latin-1')
 
-#write your code here
-
 # print(data.head())
 
 app = dash.Dash(external_stylesheets=[dbc.themes.LUMEN])
@@ -18,7 +16,7 @@ server = app.server
 
 app.layout = html.Div(children = [
     html.H1("Music Recommendation System", className="text-center fw-bold text-decoration-underline", style={'color': 'black'}),
-
+    html.Br(),
     html.Div( [ dbc.Select( id='artist-dropdown',options=[{'label': 'Highest popularity', 'value': '01'},
                                                                         {'label': 'Highest energy', 'value': '02'},
                                                                         {'label': 'highest Beats.Per.Minute', 'value': '03'},
@@ -113,6 +111,14 @@ def recommend_genre(genre_option):
     
     if genre_option == '01':  # Highest popularity
         popularity=data.groupby('Genre')[['Popularity']].median().sort_values(by='Popularity',ascending =False)
+        # jumbotron = dbc.Row([dbc.Col(html.Div(
+        #                                 [   html.H2(f"{popularity.index[0]}", className="display-3"),
+        #                                     html.Hr(className="my-2"),
+        #                                     html.P(f"{popularity.index[0]} is the artist with highest popularity!"
+        #                                 )],
+        #                                 className="h-100 p-5 text-white bg-dark rounded-3"), md=6)])
+        # print(popularity.index[0])
+        # return jumbotron
         return dbc.Alert(popularity.index[0])
     
     elif genre_option == '02':  # Highest Beats.Per.Minute          
@@ -138,106 +144,3 @@ def recommend_genre(genre_option):
 # Run the app
 if __name__ == '__main__':
     app.run_server(debug=True, port=8067)
-
-
-# ##Recommend the Artist Name which has highest poularity
-
-# data.set_index('Artist.Name',inplace=True)
-
-# data["Popularity"].idxmax()
-
-
-
-# #Recommend which Artist Name is Most Popular.
-
-# dance=data.groupby('Artist.Name')[['Popularity']].median().sort_values(by='Popularity',ascending =False)
-
-# print(dance.index[0])
-
-
-
-# #Recommend the Artist Name which has highest Energy
-
-# data["Energy"].idxmax()
-
-
-
-# #Recommend the Artist Name which has highest Beats.Per.Minute
-
-# print(data["Beats.Per.Minute"].idxmax())
-
-
-
-# #Recommend the Artist Name which has highest Liveness
-
-# data["Liveness"].idxmax()
-
-
-
-# #Recommend which Genre has highest count in Spotify dataset.
-
-# data['Genre'].value_counts().idxmax()
-
-
-
-# # Recommend top 10 artist with top genres.
-
-# print(data[data.Popularity > 90].groupby(by=['Genre','Artist.Name']).agg('count')['Track.Name'].sort_values(ascending=False)[:10])
-
-
-
-
-
-# #Recommend which genre has highest popularity.
-
-# popularity=data.groupby('Genre')[['Popularity']].median().sort_values(by='Popularity',ascending =False)
-
-# print(popularity.index[0])
-
-
-
-# #Recommend and visualise Beats.Per.Minute for different Genres.
-
-# bpm=data.groupby('Genre')[['Popularity']].median().sort_values(by='Popularity',ascending =False)
-
-# print(bpm.index[0])
-
-
-
-# #Recommend which genre has highest Energy.
-
-# energy=data.groupby('Genre')[['Energy']].median().sort_values(by='Energy',ascending =False)
-
-# print(energy.index[0])
-
-
-# #Recommend which genre has highest Liveness.
-
-# liveness=data.groupby('Genre')[['Liveness']].median().sort_values(by='Liveness',ascending =False)
-
-# print(liveness.index[0])
-
-
-
-
-# #Recommend which genre has most suitable for dancing.
-
-# dance=data.groupby('Genre')[['Danceability']].median().sort_values(by='Danceability',ascending =False)
-
-# print(dance.index[0])
-
-
-
-# #Recommend which Artist Name has highest Dancibility.
-
-# dance=data.groupby('Artist.Name')[['Danceability']].median().sort_values(by='Danceability',ascending =False)
-
-# print(dance.index[0])
-
-
-
-# #Recommend which Artist Name has highest duration of Song.
-
-# dance=data.groupby('Artist.Name')[['Valence.']].median().sort_values(by='Valence.',ascending =False)
-
-# print(dance.index[0])
