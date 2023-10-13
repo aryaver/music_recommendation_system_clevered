@@ -11,26 +11,29 @@ data=pd.read_csv('https://confrecordings.ams3.digitaloceanspaces.com/top50.csv',
 
 # print(data.head())
 
-app = dash.Dash(external_stylesheets=[dbc.themes.LUMEN])
+app = dash.Dash(external_stylesheets=[dbc.themes.CYBORG])
 server = app.server
 
 app.layout = html.Div(children = [
-    html.H1("Music Recommendation System", className="text-center fw-bold text-decoration-underline", style={'color': 'black'}),
+    html.H1("Music Recommendation System", className="text-center fw-bold text-decoration-underline", style={'color': 'light'}),
     html.Br(),
-    html.Div( [ dbc.Select( id='artist-dropdown',options=[{'label': 'Highest popularity', 'value': '01'},
-                                                                        {'label': 'Highest energy', 'value': '02'},
-                                                                        {'label': 'highest Beats.Per.Minute', 'value': '03'},
-                                                                        {'label': 'Liveness', 'value': '04'},
-                                                                        {'label': 'highest count in Spotify dataset', 'value': '05'},
-                                                                        {'label': 'highest Dancibility', 'value': '06'},
-                                                                        {'label': 'highest duration of Song', 'value': '07'},
+    html.Div( ["Select desired property to get music recommendation:",
+                html.Div( "Select artist: "), 
+                dbc.Select( id='artist-dropdown',options=[{'label': 'Highest popularity', 'value': '01'},
+                                                            {'label': 'Highest energy', 'value': '02'},
+                                                            {'label': 'highest Beats.Per.Minute', 'value': '03'},
+                                                            {'label': 'Liveness', 'value': '04'},
+                                                            {'label': 'highest count in Spotify dataset', 'value': '05'},
+                                                            {'label': 'highest Dancibility', 'value': '06'},
+                                                            {'label': 'highest duration of Song', 'value': '07'},
                                                                         ],
                                                                 placeholder="Recommend artist with... ",
                                                                 style={'width': '90%', 'margin': '15px'},
                                                                 className="px-2 border"# bg-white rounded-pill"
                         ),
-                        html.Br(),
-                                dbc.Select( id='genre-dropdown',options=[{'label': 'highest popularity', 'value': '01'},
+                # html.Br(),
+                html.Div( "Select genre: "),
+                dbc.Select( id='genre-dropdown',options=[{'label': 'highest popularity', 'value': '01'},
                                                          {'label': 'highest Beats.Per.Minute', 'value': '02'},
                                                          {'label': 'highest Energy', 'value': '03'},
                                                          {'label': 'highest Liveness', 'value': '04'},
@@ -39,15 +42,14 @@ app.layout = html.Div(children = [
                             placeholder='Recommend Genre with...',
                             style={'width': '90%', 'margin': '15px'},
                             className="px-2 border"# bg-white rounded-pill"
-                        ),]),
+                        ),],className = "fw-bold"),
     html.Br(),
     html.Br(),
-    html.Br(),
-    html.Br(),
-    html.Div(id = 'artist-recommendation-result', style={'width': '90%', 'margin': '15px'},),
-    html.Div(id = 'genre-recommendation-result', style={'width': '90%', 'margin': '15px'},),
+    html.Div( id = 'artist-recommendation-result', style={'width': '90%', 'margin': '15px'},),
+    html.Div( id = 'genre-recommendation-result', style={'width': '90%', 'margin': '15px'},),
+    
 ])
-# #Task-1:-print(data.head())
+# #Task-1:-print(data.head()) "Select artist: "
 
 # print(data.shape)
 
@@ -73,30 +75,87 @@ def recommend_artist(artist_option):
 
     if artist_option == '01':  # Highest popularity
         dance = data.groupby('Artist.Name')[['Popularity']].median().sort_values(by='Popularity', ascending=False)
-        return  dbc.Alert(dance.index[0])
+        jumbotron = dbc.Row([dbc.Col(html.Div(
+                                        [   html.H2(f"{dance.index[0]}", className="display-3"),
+                                            html.Hr(className="my-2"),
+                                            html.P(f"{dance.index[0]} is the artist with highest Popularity!"
+                                        )],
+                                        className="h-100 p-5 text-white rounded-3"), md=6)])
+         
+        return jumbotron
+        # return  dbc.Alert(dance.index[0])
 
     elif artist_option == '02':  # Highest energy 
-        dance = data.groupby('Artist.Name')[['Energy']].median().sort_values(by='Energy', ascending=False)     
-        return dbc.Alert(dance.index[0])
+        dance = data.groupby('Artist.Name')[['Energy']].median().sort_values(by='Energy', ascending=False)    
+        jumbotron = dbc.Row([dbc.Col(html.Div(
+                                        [   html.H2(f"{dance.index[0]}", className="display-3"),
+                                            html.Hr(className="my-2"),
+                                            html.P(f"{dance.index[0]} is the artist with highest Energy!"
+                                        )],
+                                        className="h-100 p-5 text-white rounded-3"), md=6)])
+         
+        return jumbotron 
+        # return dbc.Alert(dance.index[0])
 
     elif artist_option == '03':  # Highest Beats.Per.Minute  
-        dance = data.groupby('Artist.Name')[['Beats.Per.Minute']].median().sort_values(by='Beats.Per.Minute', ascending=False)     
-        return dbc.Alert(dance.index[0])
+        dance = data.groupby('Artist.Name')[['Beats.Per.Minute']].median().sort_values(by='Beats.Per.Minute', ascending=False) 
+        jumbotron = dbc.Row([dbc.Col(html.Div(
+                                        [   html.H2(f"{dance.index[0]}", className="display-3"),
+                                            html.Hr(className="my-2"),
+                                            html.P(f"{dance.index[0]} is the artist with highest Beats.Per.Minute!"
+                                        )],
+                                        className="h-100 p-5 text-white rounded-3"), md=6)])
+         
+        return jumbotron     
+        # return dbc.Alert(dance.index[0])
     
     elif artist_option == '04':  # Liveness        
-        dance = data.groupby('Artist.Name')[['Liveness']].median().sort_values(by='Liveness', ascending=False)     
-        return dbc.Alert(dance.index[0])
+        dance = data.groupby('Artist.Name')[['Liveness']].median().sort_values(by='Liveness', ascending=False)    
+        jumbotron = dbc.Row([dbc.Col(html.Div(
+                                        [   html.H2(f"{dance.index[0]}", className="display-3"),
+                                            html.Hr(className="my-2"),
+                                            html.P(f"{dance.index[0]} is the artist with highest Liveness!"
+                                        )],
+                                        className="h-100 p-5 text-white rounded-3"), md=6)])
+         
+        return jumbotron  
+        # return dbc.Alert(dance.index[0])
 
-    elif artist_option == '05':  # Highest count in Spotify dataset        
-        return dbc.Alert(data['Genre'].value_counts().idxmax())
+    elif artist_option == '05':  # Highest count in Spotify dataset   
+        jumbotron = dbc.Row([dbc.Col(html.Div(
+                                        [   html.H2(f"{data['Genre'].value_counts().idxmax()}", className="display-3"),
+                                            html.Hr(className="my-2"),
+                                            html.P(f"{data['Genre'].value_counts().idxmax()} is the artist with highest count in Spotify dataset!"
+                                        )],
+                                        className="h-100 p-5 text-white rounded-3"), md=6)])
+         
+        return jumbotron  
+        # return dbc.Alert(data['Genre'].value_counts().idxmax())
 
     elif artist_option == '06':  # Highest Dancibility
         dance=data.groupby('Artist.Name')[['Danceability']].median().sort_values(by='Danceability',ascending =False)
-        return dbc.Alert(dance.index[0])
+        jumbotron = dbc.Row([dbc.Col(html.Div(
+                                        [   html.H2(f"{dance.index[0]}", className="display-3"),
+                                            html.Hr(className="my-2"),
+                                            html.P(f"{dance.index[0]} is the artist with highest Dancibility!"
+                                        )],
+                                        className="h-100 p-5 text-white rounded-3"), md=6)])
+         
+        return jumbotron 
+        # return dbc.Alert(dance.index[0])
 
     elif artist_option == '07':  # Highest duration of Song
         dance=data.groupby('Artist.Name')[['Valence.']].median().sort_values(by='Valence.',ascending =False)
-        return dbc.Alert(dance.index[0])
+        jumbotron = dbc.Row([dbc.Col(html.Div(
+                                        [   html.H2(f"{dance.index[0]}", className="display-3"),
+                                            html.Hr(className="my-2"),
+                                            html.P(f"{dance.index[0]} is the artist with highest duration of Song!"
+                                        )],
+                                        className="h-100 p-5 text-white rounded-3"), md=6)])
+         
+        return jumbotron 
+        # return dbc.Alert(dance.index[0])
+    
     
     return ''
 
@@ -111,32 +170,64 @@ def recommend_genre(genre_option):
     
     if genre_option == '01':  # Highest popularity
         popularity=data.groupby('Genre')[['Popularity']].median().sort_values(by='Popularity',ascending =False)
-        # jumbotron = dbc.Row([dbc.Col(html.Div(
-        #                                 [   html.H2(f"{popularity.index[0]}", className="display-3"),
-        #                                     html.Hr(className="my-2"),
-        #                                     html.P(f"{popularity.index[0]} is the artist with highest popularity!"
-        #                                 )],
-        #                                 className="h-100 p-5 text-white bg-dark rounded-3"), md=6)])
-        # print(popularity.index[0])
-        # return jumbotron
-        return dbc.Alert(popularity.index[0])
+        jumbotron = dbc.Row([dbc.Col(html.Div(
+                                        [   html.H2(f"{popularity.index[0]}", className="display-3"),
+                                            html.Hr(className="my-2"),
+                                            html.P(f"{popularity.index[0]} is the genre with highest popularity!"
+                                        )],
+                                        className="h-100 p-5 text-white rounded-3"), md=6)])
+        print(popularity.index[0])
+        return jumbotron
+        # return dbc.Alert(popularity.index[0])
     
     elif genre_option == '02':  # Highest Beats.Per.Minute          
-        bpm=data.groupby('Genre')[['Popularity']].median().sort_values(by='Popularity',ascending =False)
-        return dbc.Alert(bpm.index[0])
+        bpm=data.groupby('Genre')[['Beats.Per.Minute']].median().sort_values(by='Beats.Per.Minute',ascending =False)
+        jumbotron = dbc.Row([dbc.Col(html.Div(
+                                        [   html.H2(f"{bpm.index[0]}", className="display-3"),
+                                            html.Hr(className="my-2"),
+                                            html.P(f"{bpm.index[0]} is the genre with highest Beats.Per.Minute!"
+                                        )],
+                                        className="h-100 p-5 text-white rounded-3"), md=6)])
+        print(bpm.index[0])
+        return jumbotron
+        # return dbc.Alert(bpm.index[0])
 
     elif genre_option == '03':  # Highest Energy   
         energy=data.groupby('Genre')[['Energy']].median().sort_values(by='Energy',ascending =False)
-        return dbc.Alert(energy.index[0])
+        jumbotron = dbc.Row([dbc.Col(html.Div(
+                                        [   html.H2(f"{energy.index[0]}", className="display-3"),
+                                            html.Hr(className="my-2"),
+                                            html.P(f"{energy.index[0]} is the genre with highest Energy!"
+                                        )],
+                                        className="h-100 p-5 text-white rounded-3"), md=6)])
+        print(energy.index[0])
+        return jumbotron
+        # return dbc.Alert(energy.index[0])
     
     elif genre_option == '04':  # Liveness        
         liveness=data.groupby('Genre')[['Liveness']].median().sort_values(by='Liveness',ascending =False)
-        return dbc.Alert(liveness.index[0])
+        jumbotron = dbc.Row([dbc.Col(html.Div(
+                                        [   html.H2(f"{liveness.index[0]}", className="display-3"),
+                                            html.Hr(className="my-2"),
+                                            html.P(f"{liveness.index[0]} is the genre with highest Liveness!"
+                                        )],
+                                        className="h-100 p-5 text-white rounded-3"), md=6)])
+        print(liveness.index[0])
+        return jumbotron
+        # return dbc.Alert(liveness.index[0])
 
 
     elif genre_option == '05':  # Highest dancibility       
         dance=data.groupby('Genre')[['Danceability']].median().sort_values(by='Danceability',ascending =False)
-        return dbc.Alert(dance.index[0])
+        jumbotron = dbc.Row([dbc.Col(html.Div(
+                                        [   html.H2(f"{dance.index[0]}", className="display-3"),
+                                            html.Hr(className="my-2"),
+                                            html.P(f"{dance.index[0]} is the genre with highest Danceability!"
+                                        )],
+                                        className="h-100 p-5 text-white rounded-3"), md=6)])
+         
+        return jumbotron
+        # return dbc.Alert(dance.index[0])
     
     return ''
 
